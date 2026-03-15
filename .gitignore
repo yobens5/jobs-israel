@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+.venv/
+venv/
+
+# Data intermediates (large/generated files)
+cops_data.zip
+data/
+pages/
+html/
+occupational_outlook_handbook.html
+
+# Canadian source files (not needed for Israel version)
+occupations.csv
+occupations.json
+scores.json
+build_occupations.py
+build_jobbank_urls.py
+build_site_data.py
+build_site_data_ca.py
+make_csv.py
+make_csv_ca.py
+make_prompt.py
+generate_pages.py
+parse_detail.py
+parse_occupations.py
+process.py
+process.md
+scrape.py
+scrape_jobbank.py
+uv.lock
+
+# Claude internal
+.claude/

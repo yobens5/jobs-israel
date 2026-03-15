@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methodology — AI Exposure of the Israeli Job Market</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0f;
+  --bg2: #12121a;
+  --bg3: #1a1a26;
+  --fg: #e0e0e8;
+  --fg2: #888894;
+  --accent: #4a9eff;
+  --border: rgba(255,255,255,0.07);
+  --sep: rgba(255,255,255,0.2);
+}
+body.light {
+  --bg: #f2f2f7;
+  --bg2: #ffffff;
+  --bg3: #e8e8f0;
+  --fg: #1a1a2e;
+  --fg2: #6b6b80;
+  --accent: #0070f3;
+  --border: rgba(0,0,0,0.08);
+  --sep: rgba(0,0,0,0.2);
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.6;
+  padding: 0 0 80px;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  z-index: 10;
+}
+nav a {
+  color: var(--fg2);
+  text-decoration: none;
+  font-size: 13px;
+}
+nav a:hover { color: var(--fg); }
+nav a.home {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--fg);
+}
+nav .sep { color: var(--sep); }
+
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 48px 32px 0;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.lead {
+  font-size: 16px;
+  color: var(--fg2);
+  line-height: 1.6;
+  margin-bottom: 40px;
+  max-width: 640px;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 44px 0 14px;
+  padding-top: 44px;
+  border-top: 1px solid var(--border);
+}
+h2:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
+
+h3 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 24px 0 8px;
+  color: var(--fg);
+}
+
+p {
+  color: var(--fg2);
+  margin-bottom: 14px;
+  max-width: 680px;
+}
+
+ul, ol {
+  color: var(--fg2);
+  padding-left: 20px;
+  margin-bottom: 14px;
+  max-width: 680px;
+}
+li { margin-bottom: 5px; }
+
+code {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  background: var(--bg3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--fg);
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+.stat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+}
+.stat-card .num {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-card .desc {
+  font-size: 12px;
+  color: var(--fg2);
+  line-height: 1.4;
+}
+.num-green  { color: #5cd65c; }
+.num-yellow { color: #e0b44a; }
+.num-red    { color: #e05c5c; }
+.num-blue   { color: var(--accent); }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 16px 0 24px;
+}
+th {
+  text-align: left;
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fg2);
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--fg2);
+  vertical-align: top;
+}
+td:first-child { color: var(--fg); font-weight: 500; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--bg3); }
+
+.callout {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 13px;
+  color: var(--fg2);
+  max-width: 680px;
+}
+.callout strong { color: var(--fg); }
+
+.exposure-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 6px 0;
+  font-size: 13px;
+}
+.exposure-bar .label {
+  width: 80px;
+  flex-shrink: 0;
+  color: var(--fg2);
+  font-size: 12px;
+}
+.exposure-bar .track {
+  flex: 1;
+  height: 10px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.exposure-bar .fill { height: 100%; border-radius: 3px; }
+.exposure-bar .val {
+  width: 30px;
+  text-align: right;
+  font-size: 12px;
+  color: var(--fg);
+}
+
+.tier-dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 2px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="home">← AI Exposure: Israel</a>
+  <span class="sep">|</span>
+  <a href="index.html">Treemap</a>
+  <span class="sep">|</span>
+  <span style="color:var(--fg)">Methodology</span>
+  <button id="themeToggle" onclick="toggleTheme()" title="Toggle light/dark mode"
+    style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:50%;width:28px;height:28px;cursor:pointer;font-size:14px;color:var(--fg2);transition:all 0.15s;">
+  </button>
+</nav>
+
+<div class="container">
+
+  <h1>Methodology &amp; Statistics</h1>
+  <p class="lead">
+    How we built the dataset, how AI exposure scores are calculated,
+    and what the numbers mean for Israel's ~4.3 million workers.
+  </p>
+
+  <!-- KEY NUMBERS -->
+  <h2>Key numbers</h2>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="num num-blue">112</div>
+      <div class="desc">ISCO-08 occupations covered across all sectors</div>
+    </div>
+    <div class="stat-card">
+      <div class="num num-blue">~3.0M</div>
+      <div class="desc">Israeli jobs represented (CBS 2023 data)</div>
+    </div>
+    <div class="stat-card">
+      <div class="num num-yellow">4.9</div>
+      <div class="desc">Job-weighted average AI exposure (0–10)</div>
+    </div>
+    <div class="stat-card">
+      <div class="num num-green">23%</div>
+      <div class="desc">Jobs in Low-exposure occupations (score 2–3)</div>
+    </div>
+    <div class="stat-card">
+      <div class="num num-red">28%</div>
+      <div class="desc">Jobs in High-exposure occupations (score 7+)</div>
+    </div>
+    <div class="stat-card">
+      <div class="num num-red">₪150B</div>
+      <div class="desc">Annual NIS payroll in high-exposure occupations (7+)</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Israel's exposure is higher than comparable economies.</strong> Israel's large high-tech sector
+    (software developers, data scientists, cybersecurity) and significant professional services workforce
+    (lawyers, accountants, financial analysts) push the job-weighted average AI exposure to 4.9 — notably
+    higher than Canada (3.7) and the US average — reflecting the concentration of knowledge-work occupations
+    in Israel's labor market.
+  </div>
+
+  <!-- DATA SOURCES -->
+  <h2>Data sources</h2>
+  <p>Employment data is drawn from Israeli government publications and international classification standards.</p>
+
+  <table>
+    <tr>
+      <th>Source</th><th>Publisher</th><th>What we use</th>
+    </tr>
+    <tr>
+      <td><a href="https://www.cbs.gov.il/en/subjects/Pages/Labour-Force-Survey-LFS.aspx">Labour Force Survey (LFS) 2022–2023</a></td>
+      <td>Central Bureau of Statistics (CBS) Israel</td>
+      <td>Employment 2023 by occupation, median wages, sector distribution</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.cbs.gov.il/he/pages/default.aspx">Statistical Abstract of Israel 2023</a></td>
+      <td>CBS Israel</td>
+      <td>Occupation-level employment projections and growth rates 2023–2033</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.taasuka.gov.il">Israeli Employment Service (Taasuka)</a></td>
+      <td>Ministry of Labour, Social Affairs and Social Services</td>
+      <td>Occupation labour market outlook ratings and employment demand indicators</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.ilo.org/public/english/bureau/stat/isco/isco08/">ISCO-08 Classification</a></td>
+      <td>International Labour Organization (ILO)</td>
+      <td>Occupation titles, 4-digit ISCO codes, major group and sub-major group structure</td>
+    </tr>
+    <tr>
+      <td><a href="https://www.economy.gov.il/research-and-economics/economicresearch/pages/labormarket.aspx">Labor Market Research</a></td>
+      <td>Israeli Ministry of Economy and Industry</td>
+      <td>Sectoral employment trends and wage surveys</td>
+    </tr>
+  </table>
+
+  <!-- OCCUPATIONS -->
+  <h2>Occupations</h2>
+  <p>
+    The 112 occupations are drawn from Israel's Labour Force Survey and classified according to
+    <strong>ISCO-08</strong> (International Standard Classification of Occupations, 2008 revision),
+    which Israel adopted as its national occupation classification standard. Occupations are organized
+    into 14 sector categories reflecting Israel's labor market structure.
+  </p>
+  <p>
+    All 112 occupations have employment figures from the 2023 CBS Labour Force Survey, representing
+    approximately <strong>3.0 million jobs</strong> — a representative cross-section of Israel's
+    ~4.3 million employed workforce.
+  </p>
+
+  <h3>By major occupational category</h3>
+  <table>
+    <tr><th>Category</th><th>Occupations</th><th>Jobs (2023)</th><th>Avg AI Exposure</th></tr>
+    <tr><td>High-tech and digital occupations</td><td>8</td><td>297K</td><td>7.1</td></tr>
+    <tr><td>Administrative and clerical occupations</td><td>8</td><td>245K</td><td>7.3</td></tr>
+    <tr><td>Legal and financial professions</td><td>6</td><td>134K</td><td>6.7</td></tr>
+    <tr><td>Business and social professions</td><td>6</td><td>88K</td><td>6.0</td></tr>
+    <tr><td>Engineering and science occupations</td><td>8</td><td>125K</td><td>5.2</td></tr>
+    <tr><td>Technical and associate occupations</td><td>11</td><td>217K</td><td>5.6</td></tr>
+    <tr><td>Plant and machine operator occupations</td><td>8</td><td>208K</td><td>5.6</td></tr>
+    <tr><td>Management occupations</td><td>10</td><td>231K</td><td>4.3</td></tr>
+    <tr><td>Service and sales occupations</td><td>13</td><td>543K</td><td>4.5</td></tr>
+    <tr><td>Elementary occupations</td><td>7</td><td>272K</td><td>4.1</td></tr>
+    <tr><td>Education and research occupations</td><td>5</td><td>215K</td><td>3.2</td></tr>
+    <tr><td>Healthcare and medical occupations</td><td>8</td><td>115K</td><td>3.0</td></tr>
+    <tr><td>Craft and trade occupations</td><td>10</td><td>230K</td><td>3.0</td></tr>
+    <tr><td>Agricultural occupations</td><td>4</td><td>46K</td><td>3.75</td></tr>
+  </table>
+
+  <!-- WAGES -->
+  <h2>Wage estimates</h2>
+  <p>
+    Salaries are reported in <strong>New Israeli Shekel (NIS / ₪)</strong> as annual figures,
+    sourced from the CBS Israel Labour Force Survey 2022–2023 and the National Wage Survey published
+    by the Israeli Ministry of Economy and Industry.
+  </p>
+  <div class="callout">
+    <strong>Currency context:</strong> As of 2024, 1 USD ≈ 3.7 NIS. Israel's minimum wage is
+    ₪5,571/month (≈ ₪67,000/year). The national median wage is approximately ₪12,000/month
+    (≈ ₪144,000/year). High-tech professionals, particularly in software and cybersecurity, often
+    earn ₪300,000–₪500,000+/year, significantly exceeding the national median.
+  </div>
+  <p>
+    Wages are assigned at the occupation level based on CBS median wage tables. Occupations in
+    the same ISCO sub-major group share base wage assumptions where individual data is unavailable.
+    This is an approximation; actual wages within occupational groups vary considerably.
+  </p>
+
+  <!-- OUTLOOK -->
+  <h2>Labour market outlook</h2>
+  <p>
+    Employment outlook ratings reflect projected demand growth over the 2023–2033 period,
+    based on CBS Israel labor force projections and Israeli Employment Service demand indicators.
+  </p>
+  <p>
+    Outlook ratings are converted to a numeric proxy for the scatter view axis:
+  </p>
+  <table>
+    <tr><th>Rating</th><th>Numeric proxy</th><th>Example sectors</th></tr>
+    <tr><td>Very good</td><td>+12</td><td>High-tech, cybersecurity, nursing, special education</td></tr>
+    <tr><td>Good</td><td>+6 to +9</td><td>Engineering, healthcare, construction, social work</td></tr>
+    <tr><td>Balance</td><td>−4 to +4</td><td>Management, retail, services, manufacturing</td></tr>
+    <tr><td>Limited</td><td>−5 to −8</td><td>Data entry, bank tellers, printing, tailoring</td></tr>
+    <tr><td>Very limited</td><td>−9 to −12</td><td>N/A in current dataset</td></tr>
+  </table>
+
+  <!-- AI EXPOSURE SCORING -->
+  <h2>AI exposure scoring</h2>
+  <p>
+    Each occupation receives a score from <strong>0 to 10</strong> measuring how much AI is
+    expected to reshape that occupation — both through direct automation and through productivity
+    amplification (fewer workers needed per unit of output).
+  </p>
+  <p>
+    Scores are generated by <strong>GPT-4o-mini</strong> (OpenAI) reading a structured
+    description of each occupation, including: ISCO-08 code, major category, employment 2023,
+    projected growth, typical tasks, and Israel-specific labor market context.
+    The model responds with a JSON object: <code>{"exposure": N, "rationale": "..."}</code>.
+    Temperature is set to 0.2 for consistency.
+  </p>
+
+  <h3>Score anchors</h3>
+  <table>
+    <tr><th>Score</th><th>Tier</th><th>Israeli examples</th></tr>
+    <tr><td>0–1</td><td><span class="tier-dot" style="background:#325032"></span>Minimal</td><td>Surgeons, plumbers, kindergarten teachers, hairdressers, masons</td></tr>
+    <tr><td>2–3</td><td><span class="tier-dot" style="background:#8ca032"></span>Low</td><td>Electricians, nurses, social workers, primary teachers, chefs, paramedics</td></tr>
+    <tr><td>4–5</td><td><span class="tier-dot" style="background:#c87832"></span>Moderate</td><td>Civil engineers, pharmacists, security guards, retail managers, elderly care</td></tr>
+    <tr><td>6–7</td><td><span class="tier-dot" style="background:#e03232"></span>High</td><td>Lawyers, software developers, marketing professionals, truck drivers, tax advisors</td></tr>
+    <tr><td>8–9</td><td><span class="tier-dot" style="background:#e01010"></span>Very high</td><td>Data scientists, financial analysts, journalists, call center operators, cashiers</td></tr>
+    <tr><td>10</td><td><span class="tier-dot" style="background:#f00000"></span>Maximum</td><td>Data entry clerks (approaching full automation)</td></tr>
+  </table>
+
+  <!-- DISTRIBUTION -->
+  <h2>Score distribution</h2>
+
+  <div style="margin:20px 0;">
+    <div class="exposure-bar">
+      <span class="label">Score 2</span>
+      <div class="track"><div class="fill" style="width:13%;background:#5c7832"></div></div>
+      <span class="val">13%</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label">Score 3</span>
+      <div class="track"><div class="fill" style="width:10%;background:#8ca032"></div></div>
+      <span class="val">10%</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label">Score 4</span>
+      <div class="track"><div class="fill" style="width:14%;background:#c07832"></div></div>
+      <span class="val">14%</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label">Score 5</span>
+      <div class="track"><div class="fill" style="width:16%;background:#c86432"></div></div>
+      <span class="val">16%</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label">Score 6</span>
+      <div class="track"><div class="fill" style="width:9%;background:#d84832"></div></div>
+      <span class="val">9%</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label">Score 7</span>
+      <div class="track"><div class="fill" style="width:19%;background:#e03232"></div></div>
+      <span class="val">19%</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label">Score 8</span>
+      <div class="track"><div class="fill" style="width:8%;background:#e01818"></div></div>
+      <span class="val">8%</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label">Score 9</span>
+      <div class="track"><div class="fill" style="width:1%;background:#ee0808"></div></div>
+      <span class="val">1%</span>
+    </div>
+  </div>
+
+  <p>
+    Percentages are <strong>job-weighted</strong> (by 2023 employment). Israel's distribution is
+    notably skewed toward higher exposure scores compared to peer economies, reflecting the
+    outsized role of high-tech, legal, financial, and administrative occupations in Israel's
+    workforce. The job-weighted average across all ~3M jobs is <strong>4.9 / 10</strong>.
+  </p>
+
+  <!-- BY SECTOR -->
+  <h2>AI exposure by sector</h2>
+  <p>Israel's high-tech sector leads AI exposure; physical trades and healthcare are most protected:</p>
+
+  <div style="margin:16px 0;">
+    <div class="exposure-bar">
+      <span class="label" style="width:200px;">Admin &amp; clerical</span>
+      <div class="track"><div class="fill" style="width:73%;background:#e03232"></div></div>
+      <span class="val">7.3</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label" style="width:200px;">High-tech &amp; digital</span>
+      <div class="track"><div class="fill" style="width:71%;background:#e03a32"></div></div>
+      <span class="val">7.1</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label" style="width:200px;">Legal &amp; financial</span>
+      <div class="track"><div class="fill" style="width:67%;background:#e04232"></div></div>
+      <span class="val">6.7</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label" style="width:200px;">Business &amp; social</span>
+      <div class="track"><div class="fill" style="width:60%;background:#d84832"></div></div>
+      <span class="val">6.0</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label" style="width:200px;">Technical &amp; associate</span>
+      <div class="track"><div class="fill" style="width:56%;background:#c85032"></div></div>
+      <span class="val">5.6</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label" style="width:200px;">Operators &amp; machine</span>
+      <div class="track"><div class="fill" style="width:56%;background:#c85032"></div></div>
+      <span class="val">5.6</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label" style="width:200px;">Engineering &amp; science</span>
+      <div class="track"><div class="fill" style="width:52%;background:#c05832"></div></div>
+      <span class="val">5.2</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label" style="width:200px;">Service &amp; sales</span>
+      <div class="track"><div class="fill" style="width:45%;background:#b06832"></div></div>
+      <span class="val">4.5</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label" style="width:200px;">Management</span>
+      <div class="track"><div class="fill" style="width:43%;background:#a87032"></div></div>
+      <span class="val">4.3</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label" style="width:200px;">Elementary</span>
+      <div class="track"><div class="fill" style="width:41%;background:#a07232"></div></div>
+      <span class="val">4.1</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label" style="width:200px;">Agricultural</span>
+      <div class="track"><div class="fill" style="width:38%;background:#989832"></div></div>
+      <span class="val">3.75</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label" style="width:200px;">Education &amp; research</span>
+      <div class="track"><div class="fill" style="width:32%;background:#809832"></div></div>
+      <span class="val">3.2</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label" style="width:200px;">Healthcare &amp; medical</span>
+      <div class="track"><div class="fill" style="width:30%;background:#6c9c32"></div></div>
+      <span class="val">3.0</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label" style="width:200px;">Craft &amp; trade</span>
+      <div class="track"><div class="fill" style="width:30%;background:#6c9c32"></div></div>
+      <span class="val">3.0</span>
+    </div>
+  </div>
+
+  <!-- BY EDUCATION -->
+  <h2>AI exposure by education level</h2>
+  <p>In Israel, university-educated workers in high-tech and professional services face higher AI exposure than those in trade and vocational occupations:</p>
+
+  <div style="margin:16px 0;">
+    <div class="exposure-bar">
+      <span class="label" style="width:160px;">University+</span>
+      <div class="track"><div class="fill" style="width:55%;background:#cc3832"></div></div>
+      <span class="val">5.5</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label" style="width:160px;">College / 2yr</span>
+      <div class="track"><div class="fill" style="width:52%;background:#c04032"></div></div>
+      <span class="val">5.2</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label" style="width:160px;">Vocational</span>
+      <div class="track"><div class="fill" style="width:34%;background:#908832"></div></div>
+      <span class="val">3.4</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label" style="width:160px;">High school</span>
+      <div class="track"><div class="fill" style="width:52%;background:#c04032"></div></div>
+      <span class="val">5.2</span>
+    </div>
+    <div class="exposure-bar">
+      <span class="label" style="width:160px;">No degree req.</span>
+      <div class="track"><div class="fill" style="width:39%;background:#a07432"></div></div>
+      <span class="val">3.9</span>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Note on High School vs Vocational in Israel:</strong> High school graduates in Israel
+    frequently work in clerical, sales, and service roles (call centers, cashiers, administrative
+    clerks, bank tellers) which face high AI exposure — driving that category's score up to 5.2.
+    Vocational/trade workers (electricians, plumbers, HVAC) are more physically-grounded and
+    score lower despite lower formal education requirements.
+  </div>
+
+  <!-- HIGH EXPOSURE -->
+  <h2>High-exposure occupations</h2>
+  <p>Occupations scoring 7 or higher represent approximately <strong>838,000 jobs</strong> (~28% of the labour force) and a combined annual payroll of approximately <strong>₪150 billion NIS</strong>.</p>
+
+  <table>
+    <tr><th>Occupation</th><th>Score</th><th>Jobs (2023)</th><th>Median Pay</th></tr>
+    <tr><td>Data entry and records clerks</td><td>9/10</td><td>20,000</td><td>₪78K</td></tr>
+    <tr><td>Data scientists and analysts</td><td>8/10</td><td>20,000</td><td>₪360K</td></tr>
+    <tr><td>Financial analysts and advisors</td><td>8/10</td><td>15,000</td><td>₪240K</td></tr>
+    <tr><td>Call center and customer service operators</td><td>8/10</td><td>40,000</td><td>₪80K</td></tr>
+    <tr><td>Journalists and media professionals</td><td>8/10</td><td>8,000</td><td>₪140K</td></tr>
+    <tr><td>Cashiers and checkout operators</td><td>8/10</td><td>50,000</td><td>₪68K</td></tr>
+    <tr><td>Bank tellers and financial clerks</td><td>8/10</td><td>15,000</td><td>₪95K</td></tr>
+    <tr><td>Software developers and engineers</td><td>7/10</td><td>180,000</td><td>₪380K</td></tr>
+    <tr><td>Lawyers and legal counsel</td><td>7/10</td><td>60,000</td><td>₪250K</td></tr>
+    <tr><td>Certified public accountants</td><td>7/10</td><td>40,000</td><td>₪200K</td></tr>
+  </table>
+
+  <h2>Lowest-exposure occupations</h2>
+  <table>
+    <tr><th>Occupation</th><th>Score</th><th>Jobs (2023)</th></tr>
+    <tr><td>Surgeons</td><td>2/10</td><td>5,000</td></tr>
+    <tr><td>Plumbers and pipe fitters</td><td>2/10</td><td>30,000</td></tr>
+    <tr><td>Dentists</td><td>2/10</td><td>12,000</td></tr>
+    <tr><td>Masons and tile layers</td><td>2/10</td><td>30,000</td></tr>
+    <tr><td>Kindergarten and preschool teachers</td><td>2/10</td><td>30,000</td></tr>
+    <tr><td>Hairdressers and beauticians</td><td>2/10</td><td>25,000</td></tr>
+    <tr><td>Painters and decorators</td><td>2/10</td><td>20,000</td></tr>
+  </table>
+
+  <!-- PIPELINE -->
+  <h2>Pipeline</h2>
+  <p>Three scripts build the Israeli dataset from source data to the website:</p>
+
+  <table>
+    <tr><th>Script</th><th>Output</th><th>Description</th></tr>
+    <tr><td><code>occupations_il.csv</code></td><td>Source data</td><td>112 ISCO-08 occupations with CBS Israel 2023 employment, wages, and labour market outlook</td></tr>
+    <tr><td><code>scores_il.json</code></td><td>AI scores</td><td>GPT-4o-mini exposure scores (0–10) and rationale for each Israeli occupation</td></tr>
+    <tr><td><code>build_site_data_il.py</code></td><td><code>site/data.json</code></td><td>Merges CSV + scores into the single JSON the frontend loads</td></tr>
+  </table>
+
+  <!-- LIMITATIONS -->
+  <h2>Known limitations</h2>
+  <ul>
+    <li><strong>Representative sample, not complete census.</strong> The 112 occupations represent the major sectors of Israel's labor market but do not cover all ~500+ ISCO unit groups. Small and niche occupations are omitted.</li>
+    <li><strong>Wages are approximated.</strong> Median wages are estimated from CBS Israel Labor Force Surveys and may not reflect the latest wage movements, particularly in high-tech where salaries shift rapidly.</li>
+    <li><strong>National outlook is a proxy.</strong> Outlook ratings represent overall Israeli national trends and do not reflect significant regional variation (Tel Aviv high-tech vs. periphery regions).</li>
+    <li><strong>AI exposure is an LLM opinion.</strong> Scores come from a language model reading occupation descriptions — they are not empirically measured automation probabilities. Individual scores should be interpreted as rough tiers, not precise values.</li>
+    <li><strong>Defense and intelligence sector excluded.</strong> A significant portion of Israel's skilled workforce operates in classified defense, intelligence, and military technology sectors that are not captured in public CBS employment statistics.</li>
+    <li><strong>Employment year is 2023.</strong> The dataset uses 2023 CBS data as the base employment year; rapid high-tech hiring or layoffs in 2024 are not reflected.</li>
+  </ul>
+
+  <!-- CREDITS -->
+  <h2>Credits</h2>
+  <ul>
+    <li><strong>Original concept &amp; code:</strong> <a href="https://github.com/karpathy/jobs">Andrej Karpathy — karpathy/jobs</a> (US version using BLS data)</li>
+    <li><strong>Canadian adaptation:</strong> <a href="https://github.com/krunal16-c/jobs">krunal16-c/jobs</a> — data pipeline and visualization framework</li>
+    <li><strong>Israeli adaptation:</strong> ISCO-08 mapping, CBS Israel data, and Israel-specific labor market context</li>
+    <li><strong>Employment data:</strong> <a href="https://www.cbs.gov.il">Central Bureau of Statistics (CBS) Israel</a></li>
+    <li><strong>Labour market data:</strong> <a href="https://www.taasuka.gov.il">Israeli Employment Service (Taasuka)</a></li>
+    <li><strong>Occupation classification:</strong> <a href="https://www.ilo.org/public/english/bureau/stat/isco/isco08/">ISCO-08 — International Labour Organization</a></li>
+    <li><strong>AI scoring:</strong> GPT-4o-mini via <a href="https://openai.com">OpenAI API</a></li>
+  </ul>
+
+</div>
+
+<script>
+let isLight = localStorage.getItem("theme") === "light";
+if (isLight) document.body.classList.add("light");
+
+function applyTheme() {
+  document.body.classList.toggle("light", isLight);
+  const btn = document.getElementById("themeToggle");
+  if (btn) btn.textContent = isLight ? "🌙" : "☀️";
+}
+
+function toggleTheme() {
+  isLight = !isLight;
+  localStorage.setItem("theme", isLight ? "light" : "dark");
+  applyTheme();
+}
+
+applyTheme();
+</script>
+</body>
+</html>
