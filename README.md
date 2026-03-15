@@ -47,5 +47,4 @@ python3 build_site_data_il.py
 ## Credits
 
 - **Original**: [Andrej Karpathy — karpathy/jobs](https://github.com/karpathy/jobs)
-- **Canadian adaptation**: [krunal16-c/jobs](https://github.com/krunal16-c/jobs)
 - **Israeli adaptation**: ISCO-08 mapping, CBS Israel data
